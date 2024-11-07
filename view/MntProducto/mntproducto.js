@@ -86,7 +86,18 @@ function guardaryeditar(e){
 
 
 function editar(prod_id){
-    console.log(prod_id);
+    $('#mdlTitulo').html('Editar Registro');
+
+    $.post("../../controller/producto.php?op=mostrar",{prod_id:prod_id},function(data){
+        data = JSON.parse(data);
+        $('#prod_id').val(data.prod_id);
+        $('#prod_nom').val(data.prod_nom);
+        //console.log(data);
+    });
+
+    $('#modalmantenimiento').modal('show');
+
+    // console.log(prod_id);
 }
 
 function eliminar (prod_id){
@@ -123,6 +134,8 @@ function eliminar (prod_id){
 
 $(document).on("click","#btnNuevo",function(){
     $('#mdlTitulo').html('Nuevo Registro');
+    $('#producto_form')[0].reset();
+    $('#prod_id').val('');
     $('#modalmantenimiento').modal('show');
 });
 
