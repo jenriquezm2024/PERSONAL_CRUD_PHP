@@ -1,7 +1,9 @@
 var tabla;
 
 function init(){
-
+$('#producto_form').on("submit",function(e){
+    guardaryeditar(e);
+});
 }
 
 $(document).ready(function(){
@@ -54,6 +56,74 @@ tabla=$('#productos_data').dataTable({
             }
             }
         }).DataTable();
+});
+
+
+function guardaryeditar(e){
+    e.preventDefault();
+    var formData = new FormData($('#producto_form')[0]);
+
+    $.ajax({
+        url:"../../controller/producto.php?op=guardaryeditar",
+        type:"POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(datos){
+            //console.log(datos);
+            $('#producto_form')[0].reset();
+            $('#modalmantenimiento').modal('hide');
+            $('#productos_data').DataTable().ajax.reload();
+
+            Swal.fire({
+                title: "Registro!",
+                text: "El registro se guardó correctamente.",
+                icon: "success"
+            });
+        }
+    });
+}
+
+
+function editar(prod_id){
+    console.log(prod_id);
+}
+
+function eliminar (prod_id){
+
+    Swal.fire({
+        title: "CRUD",
+        text: "Desea Eliminar el registro",
+        icon: "error",
+        showCancelButton: true,
+        // confirmButtonColor: "#3085d6",
+        // cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "No",
+        reverseButtons:true
+      }).then((result) => {
+        if (result.isConfirmed) {
+            $.post("../../controller/producto.php?op=eliminar",{prod_id:prod_id},function(data){
+
+            });
+            $('#productos_data').DataTable().ajax.reload();
+            //console.log(prod_id);
+            Swal.fire({
+            title: "Eliminado!",
+            text: "El registro se eliminó correctamente.",
+            icon: "success"
+          });
+        }
+      });
+    
+    
+            
+    
+}
+
+$(document).on("click","#btnNuevo",function(){
+    $('#mdlTitulo').html('Nuevo Registro');
+    $('#modalmantenimiento').modal('show');
 });
 
 init();
